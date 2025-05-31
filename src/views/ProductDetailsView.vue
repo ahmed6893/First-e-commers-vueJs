@@ -25,6 +25,9 @@
             <div class="top-area">
                 <div class="row align-items-center">
                     <div class="col-lg-6 col-md-12 col-12">
+                        <div v-if="successMessage" class="alert alert-success mt-2">
+                            {{ successMessage }}
+                        </div>
                         <div class="product-images">
                             <main id="gallery">
                                 <div class="main-img">
@@ -292,6 +295,7 @@
                 selectedColor:'',
                 selectedSize:'',
                 qty:1,
+                successMessage: '',
             }
         },
         mounted() {
@@ -315,16 +319,21 @@
             addToCart(){
                 const cartData ={
                     product_id : this.product.id,
-                    name:this.product.name,
-                    price:this.product.selling_price,
-                    qty:this.qty,
-                    color:this.selectedColor,
-                    size:this.selectedSize,
-                    image:this.product.image
+                    name:        this.product.name,
+                    price:       this.product.selling_price,
+                    qty:         this.qty,
+                    color:       this.selectedColor,
+                    size:        this.selectedSize,
+                    image:       this.product.image
                 };
 
                 axios.post('/api/add-to-cart', cartData).then(res=>{
-                    alert(res.data.message);
+                    this.successMessage = res.data.message;
+
+                    setTimeout(() => {
+                        this.successMessage = '';
+                    }, 2000);
+
                 }).catch(error =>{
                     console.error("Cart error:", error);
                     alert("Something went wrong!");
