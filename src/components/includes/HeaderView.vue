@@ -140,27 +140,17 @@
                                             <a href="cart.html">View Cart</a>
                                         </div>
                                         <ul class="shopping-list">
-                                            <li>
+                                            <li v-for="item in cartItems" :key="item.id">
                                                 <a href="javascript:void(0)" class="remove" title="Remove this item"><i class="lni lni-close"></i></a>
                                                 <div class="cart-img-head">
-                                                    <a class="cart-img" href="product-details.html"><img src="assets/images/header/cart-items/item1.jpg" alt="#"></a>
+                                                    <a class="cart-img" href="product-details.html"><img :src="item.product.image" alt="#"></a>
                                                 </div>
                                                 <div class="content">
-                                                    <h4><a href="product-details.html">
-                                                        Apple Watch Series 6</a></h4>
-                                                    <p class="quantity">1x - <span class="amount">$99.00</span></p>
+                                                    <h4><a href="product-details.html">{{item.product.name}}</a></h4>
+                                                    <p class="quantity">{{item.quality}}x - <span class="amount">TK{{ item.price }}</span></p>
                                                 </div>
                                             </li>
-                                            <li>
-                                                <a href="javascript:void(0)" class="remove" title="Remove this item"><i class="lni lni-close"></i></a>
-                                                <div class="cart-img-head">
-                                                    <a class="cart-img" href="product-details.html"><img src="assets/images/header/cart-items/item2.jpg" alt="#"></a>
-                                                </div>
-                                                <div class="content">
-                                                    <h4><a href="product-details.html">Wi-Fi Smart Camera</a></h4>
-                                                    <p class="quantity">1x - <span class="amount">$35.00</span></p>
-                                                </div>
-                                            </li>
+
                                         </ul>
                                         <div class="bottom">
                                             <div class="total">
@@ -284,19 +274,40 @@
         name: "HeaderView",
         data(){
             return{
+                cartCount:0,
+                cartItems:[],
                 categories:[],
             }
         },
         created() {
             this.getAllcategory()
         },
-        methods:{
+        mounted() {
+            this.loadCart();
+
+            window.addEventListener('storage', (event) => {
+                if (event.key === 'cart_updated') {
+                    this.loadCart();
+                }
+            });
+        },
+        methods: {
+            loadCart() {
+                axios.get("http://localhost/project-works/public/api/cart")
+                    .then(res => {
+                        this.cartItems = res.data.cart_items;
+                        this.cartCount = this.cartItems.length;
+                    })
+                    .catch(error => {
+                        console.log("Cart Load Error", error);
+                    });
+            },
             getAllcategory(){
-                axios("http://localhost/project-works/public/api/get-all-category").then((response) => {console.log(response.data)
-                    this.categories = response.data;
-                });
+                axios.get("http://localhost/project-works/public/api/get-all-category")
+                    .then(response => {
+                        this.categories = response.data;
+                    });
             }
-        }
     }
 </script>
 

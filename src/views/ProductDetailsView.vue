@@ -327,12 +327,13 @@
                     image:       this.product.image
                 };
 
-                axios.post('/api/add-to-cart', cartData).then(res=>{
+                axios.post('http://localhost/project-works/public/api/add-to-cart', cartData).then(res=>{
                     this.successMessage = res.data.message;
 
                     setTimeout(() => {
                         this.successMessage = '';
-                    }, 2000);
+                    }, 5000);
+                    localStorage.setItem('cart_updated', Date.now());
 
                 }).catch(error =>{
                     console.error("Cart error:", error);
