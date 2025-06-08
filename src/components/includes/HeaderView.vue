@@ -147,7 +147,7 @@
                                                 </div>
                                                 <div class="content">
                                                     <h4><a href="product-details.html">{{item.product.name}}</a></h4>
-                                                    <p class="quantity">{{item.quality}}x - <span class="amount">TK{{ item.price }}</span></p>
+                                                    <p class="quantity">{{item.qty}}x - <span class="amount">TK{{ item.price }}</span></p>
                                                 </div>
                                             </li>
 
@@ -302,12 +302,13 @@
                         console.log("Cart Load Error", error);
                     });
             },
-            getAllcategory(){
+            getAllcategory() {
                 axios.get("http://localhost/project-works/public/api/get-all-category")
                     .then(response => {
                         this.categories = response.data;
                     });
             }
+        }
     }
 </script>
 
